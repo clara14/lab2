@@ -30,6 +30,9 @@ typedef float Flt;
 typedef float Vec[3];
 typedef Flt	Matrix[4][4];
 
+float redf = 1.0f;
+float bluef = 0.0f;
+
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
 #define random(a) (rand()%(a))
@@ -47,6 +50,8 @@ const float gravity = -0.2f;
 #define ALPHA 1
 const int MAX_BULLETS = 11;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
+
+
 
 //-----------------------------------------------------------------------------
 //Setup timers
@@ -141,6 +146,7 @@ public:
 			a->radius = rnd()*80.0 + 40.0;
 			Flt r2 = a->radius / 2.0;
 			Flt angle = 0.0f;
+	
 			Flt inc = (PI * 2.0) / (Flt)a->nverts;
 			for (int i=0; i<a->nverts; i++) {
 				a->vert[i][0] = sin(angle) * (r2 + rnd() * a->radius);
@@ -528,9 +534,10 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 	ta->angle = 0.0;
 	ta->rotate = a->rotate + (rnd() * 4.0 - 2.0);
 
-	ta->color[0] = 0.0;
-	ta->color[1] = 0.8;
-	ta->color[2] = 0.9;
+	ta->color[0] = redf;
+	ta->color[1] = 0.0f;
+	ta->color[2] = bluef;
+	    ;
 	ta->vel[0] = a->vel[0] + (rnd()*2.0-1.0);
 	ta->vel[1] = a->vel[1] + (rnd()*2.0-1.0);
 }
@@ -564,7 +571,8 @@ void physics()
 		//How long has bullet been alive?
 		double ts = timeDiff(&b->time, &bt);
 		if (ts > 2.5) {
-			//time to delete the bullet.
+			//time to dele
+			//te the bullet.
 			memcpy(&g.barr[i], &g.barr[g.nbullets-1],
 				sizeof(Bullet));
 			g.nbullets--;
@@ -804,7 +812,7 @@ void render()
 			glPushMatrix();
 			glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
 			glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
-			glColor3f(0.9f, 0.0f, 0.0f);
+			glColor3f(redf, 0.0f, bluef);
 			glBegin(GL_POLYGON);
 				//Log("%i verts\n",a->nverts);
 				for (int j=0; j<a->nverts; j++) {
@@ -817,6 +825,15 @@ void render()
 				glVertex2f(a->pos[0], a->pos[1]);
 			glEnd();
 			a = a->next;
+			if(redf == 1.0f)
+			    redf = 0.0f;
+			else
+			    redf = 1.0f;
+
+			if(bluef==1.0f)
+			    bluef = 0.0f;
+			else
+			    bluef = 1.0f;
 		}
 	}
 	//----------------
