@@ -30,7 +30,7 @@ typedef float Flt;
 typedef float Vec[3];
 typedef Flt	Matrix[4][4];
 
-float redf = 1.0f;
+float redf = 0.5f;
 float bluef = 0.0f;
 
 //macros
@@ -533,11 +533,27 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 	ta->pos[2] = 0.0f;
 	ta->angle = 0.0;
 	ta->rotate = a->rotate + (rnd() * 4.0 - 2.0);
-
+	
+	if(redf >= 1.0f)
+	{
+		redf = 0.0f;
+	}
+	else
+	{
+		redf += .2f;
+	}
+	if(bluef == 0.0f)
+	{
+		bluef = 1.0f;
+	}
+	else
+	{
+		bluef = bluef - 0.1f;
+	}
 	ta->color[0] = redf;
 	ta->color[1] = 0.0f;
 	ta->color[2] = bluef;
-	    ;
+
 	ta->vel[0] = a->vel[0] + (rnd()*2.0-1.0);
 	ta->vel[1] = a->vel[1] + (rnd()*2.0-1.0);
 }
@@ -812,7 +828,6 @@ void render()
 			glPushMatrix();
 			glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
 			glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
-			glColor3f(redf, 0.0f, bluef);
 			glBegin(GL_POLYGON);
 				//Log("%i verts\n",a->nverts);
 				for (int j=0; j<a->nverts; j++) {
@@ -825,15 +840,6 @@ void render()
 				glVertex2f(a->pos[0], a->pos[1]);
 			glEnd();
 			a = a->next;
-			if(redf == 1.0f)
-			    redf = 0.0f;
-			else
-			    redf = 1.0f;
-
-			if(bluef==1.0f)
-			    bluef = 0.0f;
-			else
-			    bluef = 1.0f;
 		}
 	}
 	//----------------
